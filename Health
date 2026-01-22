@@ -1,0 +1,46 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Health : MonoBehaviour
+{
+    [Header("Health stats")]
+    [SerializeField] private int _maxHealth = 100;
+    private int _currentHealth;
+
+    public event Action<float> HealthChanged;
+
+    private void Start()
+    {
+        _currentHealth = _maxHealth;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            ChangeHealth(-10);
+        }
+    }
+
+    private void ChangeHealth(int value)
+    {
+        _currentHealth += value;
+
+        if (_currentHealth <= 0)
+        {
+            Death();
+        }
+        else
+        {
+            float currentHealtPercantage = (float)_currentHealth / _maxHealth;
+            HealthChanged?.Invoke(currentHealtPercantage);
+        }
+    }
+    private void Death()
+    {
+        HealthChanged?.Invoke(0);
+        Debug.Log("Ты умер ЛОХ");
+    }
+}
