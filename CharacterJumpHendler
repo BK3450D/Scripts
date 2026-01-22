@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterMovement))]
+
+public class CharacterJumpHendler : MonoBehaviour
+{
+    [Header("Jump stats")]
+    [SerializeField] private float _maxJumpTime;
+    [SerializeField] private float _maxJumpHeight;
+    private float _startJumpVelocity;
+
+    [Header("Character components")]
+    private CharacterMovement _characterMovement;
+    private CharacterController _characterController;
+
+    private void Start()
+    {
+        _characterController = GetComponent<CharacterController>();
+        _characterMovement = GetComponent<CharacterMovement>();
+
+        float maxHeightTime = _maxJumpTime / 2;
+        _characterMovement.GravityForce = (2 * _maxJumpHeight) / Mathf.Pow(maxHeightTime, 2);
+        _startJumpVelocity = (2 * _maxJumpHeight) / maxHeightTime;
+    }
+
+    public void HandleJump()
+    {
+        if(_characterController.isGrounded)
+        {
+            _characterMovement.velocityDirection.y = _startJumpVelocity;
+        }
+    }
+}
